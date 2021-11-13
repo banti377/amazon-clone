@@ -8,6 +8,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@heroicons/react": "^1.0.5",
     "@reduxjs/toolkit": "^1.6.2",
     "@tailwindcss/line-clamp": "^0.2.2",
     "firebase": "^9.4.1",
