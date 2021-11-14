@@ -2,8 +2,10 @@ import { FC, useState } from 'react';
 import Image from 'next/image';
 import { StarIcon } from '@heroicons/react/solid';
 import Currency from 'react-currency-formatter';
+import { useDispatch } from 'react-redux';
 
 import { MAX_RATING, MIN_RATING } from '../constants';
+import { addToCart } from '../slices/cartSlice';
 
 import { IProduct } from '../interfaces';
 
@@ -14,11 +16,27 @@ interface Props {
 const Product: FC<Props> = ({
   product: { id, image, category, title, description, price },
 }) => {
+  const dispatch = useDispatch();
+
   const [rating] = useState(
     Math.floor(Math.random() * (MAX_RATING - MIN_RATING + 1)) + MIN_RATING
   );
 
   const [hasPrime] = useState(Math.random() < 0.5);
+
+  const addProductToCart = () => {
+    const product = {
+      id,
+      image,
+      category,
+      title,
+      description,
+      price,
+      rating,
+      hasPrime,
+    };
+    dispatch(addToCart(product));
+  };
 
   return (
     <div className="relative flex flex-col m-5 bg-white z-30 p-10">
@@ -52,12 +70,19 @@ const Product: FC<Props> = ({
 
       {hasPrime && (
         <div className="flex items-center space-x-2 -mt-5">
-          <img src="/prime logo.png" alt="prime-logo" className="w-12" />
+          <img
+            loading="lazy"
+            src="/prime logo.png"
+            alt="prime-logo"
+            className="w-12"
+          />
           <p className="text-xs text-gray-500">FREE Next-day Delivery</p>
         </div>
       )}
 
-      <button className="mt-auto button">Add to Cart</button>
+      <button className="mt-auto button" onClick={addProductToCart}>
+        Add to Cart
+      </button>
     </div>
   );
 };

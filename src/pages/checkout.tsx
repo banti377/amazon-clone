@@ -1,9 +1,21 @@
 import { NextPage } from 'next';
 import Image from 'next/image';
+import { useSelector } from 'react-redux';
+import Currency from 'react-currency-formatter';
+import { useSession } from 'next-auth/client';
 
 import Header from '../components/Header';
+import CheckoutProduct from '../components/CheckoutProduct';
+import { selectProducts, selectTotal } from '../slices/cartSlice';
 
-const checkout: NextPage = () => {
+import { IProduct } from '../interfaces';
+
+const Checkout: NextPage = () => {
+  const products = useSelector(selectProducts);
+  const total = useSelector(selectTotal);
+
+  const [session] = useSession();
+
   return (
     <div className="bg-gray-100">
       <Header />
@@ -19,14 +31,43 @@ const checkout: NextPage = () => {
           />
 
           <div className="flex flex-col p-5 space-y-10 bg-white">
-            <h1 className="text-3xl border-b pb-4">Your Shopping Cart</h1>
+            <h1 className="text-3xl border-b pb-4">
+              {products.length
+                ? 'Shopping Cart'
+                : 'Your Shopping Cart is empty.'}
+            </h1>
+
+            {products.map((product: IProduct) => (
+              <CheckoutProduct key={product.id} product={product} />
+            ))}
           </div>
         </div>
 
-        <div></div>
+        <div className="flex flex-col bg-white p-10 shadow-md">
+          {products.length && (
+            <>
+              <h2 className="whitespace-nowrap">
+                Subtotal ({products.length} products:)
+                <span className="ml-1 font-bold">
+                  <Currency quantity={total} currency="GBP" />
+                </span>
+              </h2>
+
+              <button
+                disabled={!session}
+                className={`button mt-2 ${
+                  !session &&
+                  'from-gray-300 to-gray-500 border-gray-200 text-gray-300 cursor-not-allowed'
+                }`}
+              >
+                {!session ? 'Sign in to Checkout' : 'Proceed to Checkout'}
+              </button>
+            </>
+          )}
+        </div>
       </main>
     </div>
   );
 };
 
-export default checkout;
+export default Checkout;
