@@ -2,9 +2,9 @@ import { FC } from 'react';
 import Image from 'next/image';
 import Currency from 'react-currency-formatter';
 import { StarIcon } from '@heroicons/react/solid';
+import { useDispatch } from 'react-redux';
 
 import { IProduct } from '../interfaces';
-import { useDispatch } from 'react-redux';
 import { addToCart, removeFromCart } from '../slices/cartSlice';
 
 interface Props {

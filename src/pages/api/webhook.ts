@@ -1,19 +1,8 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { buffer } from 'micro';
-import * as admin from 'firebase-admin';
 import Stripe from 'stripe';
-import serviceAccount from '../../../firebase.json';
 
-// Establish connection to Firebase
-const app = !admin.apps.length
-  ? admin.initializeApp({
-      credential: admin.credential.cert({
-        privateKey: serviceAccount.private_key,
-        clientEmail: serviceAccount.client_email,
-        projectId: serviceAccount.project_id,
-      }),
-    })
-  : admin.app();
+import firebaseAdmin from '../../firebaseAdmin';
 
 // Establish connection to Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -23,7 +12,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 const endpointSecret = process.env.STRIPE_SIGNING_SECRET!;
 
 const fulfillOrder = async (session: any) => {
-  return app
+  return firebaseAdmin
     .firestore()
     .collection('users')
     .doc(session.metadata.email)
@@ -33,7 +22,7 @@ const fulfillOrder = async (session: any) => {
       amount: session.amount_total / 100,
       amount_shipping: session.total_details.amount_shipping / 100,
       images: JSON.parse(session.metadata.images),
-      timestamp: admin.firestore.FieldValue.serverTimestamp(),
+      timestamp: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
     })
     .then(() =>
       console.log(`Success: Order ${session.id} has been added to db.`)

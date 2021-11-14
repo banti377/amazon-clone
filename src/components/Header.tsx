@@ -8,6 +8,7 @@ import { FC } from 'react';
 import { signIn, signOut, useSession } from 'next-auth/client';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
+
 import { selectProducts } from '../slices/cartSlice';
 
 const menuItems = [

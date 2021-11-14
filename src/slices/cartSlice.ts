@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootStateOrAny } from 'react-redux';
+
 import { IProduct } from '../interfaces';
 
 interface InitialStateProps {

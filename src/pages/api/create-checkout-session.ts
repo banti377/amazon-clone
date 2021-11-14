@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { IProduct } from '../../interfaces';
 import Stripe from 'stripe';
+
+import { IProduct } from '../../interfaces';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2020-08-27',
