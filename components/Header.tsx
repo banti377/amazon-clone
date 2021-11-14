@@ -5,6 +5,7 @@ import {
   ShoppingCartIcon,
 } from '@heroicons/react/outline';
 import { FC } from 'react';
+import { signIn, signOut, useSession } from 'next-auth/client';
 
 const menuItems = [
   {
@@ -26,7 +27,7 @@ const menuItems = [
     className: 'link',
   },
   {
-    content: "Tpday's Deals",
+    content: "Today's Deals",
     className: 'link',
   },
   {
@@ -78,25 +79,29 @@ const SearchBar: FC = () => (
   </div>
 );
 
-const ItemLinks: FC = () => (
-  <div className="text-white flex items-center text-xs space-x-6 mx-6 whitespace-nowrap">
-    <div className="link">
-      <p>Hello Banti Patel</p>
-      <p className="font-extrabold md:text-sm">Account & Lists</p>
+const ItemLinks: FC = () => {
+  const [session] = useSession();
+
+  return (
+    <div className="text-white flex items-center text-xs space-x-6 mx-6 whitespace-nowrap">
+      <div className="link" onClick={() => (!session ? signIn() : signOut())}>
+        <p>{session ? `Hello, ${session.user?.name}` : 'Sign In'}</p>
+        <p className="font-extrabold md:text-sm">Account & Lists</p>
+      </div>
+      <div className="link">
+        <p>Returns</p>
+        <p className="font-extrabold md:text-sm">& Orders</p>
+      </div>
+      <div className="relative link flex items-center">
+        <span className="absolute top-0 right-0 md:right-6 h-4 w-4 bg-yellow-400 text-center rounded-full text-black font-bold">
+          0
+        </span>
+        <ShoppingCartIcon className="h-10" />
+        <p className="hidden md:inline font-extrabold md:text-sm mt-2">Cart</p>
+      </div>
     </div>
-    <div className="link">
-      <p>Returns</p>
-      <p className="font-extrabold md:text-sm">& Orders</p>
-    </div>
-    <div className="relative link flex items-center">
-      <span className="absolute top-0 right-0 md:right-6 h-4 w-4 bg-yellow-400 text-center rounded-full text-black font-bold">
-        0
-      </span>
-      <ShoppingCartIcon className="h-10" />
-      <p className="hidden md:inline font-extrabold md:text-sm mt-2">Cart</p>
-    </div>
-  </div>
-);
+  );
+};
 
 const TopNavBar: FC = () => (
   <div className="flex items-center bg-amazon_blue flex-grow py-2">
@@ -116,13 +121,11 @@ const BottomNavBar: FC = () => (
   </div>
 );
 
-const Header: FC = () => {
-  return (
-    <header>
-      <TopNavBar />
-      <BottomNavBar />
-    </header>
-  );
-};
+const Header: FC = () => (
+  <header>
+    <TopNavBar />
+    <BottomNavBar />
+  </header>
+);
 
 export default Header;

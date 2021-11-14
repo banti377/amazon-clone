@@ -1,4 +1,4 @@
-import type { NextPage, NextPageContext } from 'next';
+import type { NextPage } from 'next';
 import Head from 'next/head';
 import React from 'react';
 
@@ -31,10 +31,10 @@ const Home: NextPage<Props> = ({ products }) => {
 
 export default Home;
 
-export const getServerSideProps = async (context: NextPageContext) => {
-  const products = await fetch('https://fakestoreapi.com/products').then(
-    (res) => res.json()
-  );
+export const getServerSideProps = async () => {
+  const products = await fetch('https://fakestoreapi.com/products')
+    .then((res) => res.json())
+    .catch((err) => console.log(err));
 
   return {
     props: {
