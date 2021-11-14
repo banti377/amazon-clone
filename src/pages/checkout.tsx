@@ -2,6 +2,7 @@ import { NextPage } from 'next';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
 import Currency from 'react-currency-formatter';
+import axios from 'axios';
 import { useSession } from 'next-auth/client';
 import { loadStripe } from '@stripe/stripe-js';
 
@@ -10,11 +11,8 @@ import CheckoutProduct from '../components/CheckoutProduct';
 import { selectProducts, selectTotal } from '../slices/cartSlice';
 
 import { IProduct } from '../interfaces';
-import axios from 'axios';
 
-const stripePromise = loadStripe(
-  'pk_test_51I6evYLKx272rZ2P4hFJnYkalLuFHejKdfLPDf24l7bjeWzjhcX0hMeSGQszMsUYpHZlN717gpjTpiycnhBnCay100x1QI4rPk'
-);
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 
 const Checkout: NextPage = () => {
   const products = useSelector(selectProducts);

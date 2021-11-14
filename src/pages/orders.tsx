@@ -2,6 +2,7 @@ import moment from 'moment';
 import { NextPage, NextPageContext } from 'next';
 import { getSession, useSession } from 'next-auth/client';
 import React from 'react';
+import Stripe from 'stripe';
 
 import Header from '../components/Header';
 import Order from '../components/Order';
@@ -43,7 +44,9 @@ const Orders: NextPage<Props> = ({ orders }) => {
 export default Orders;
 
 export const getServerSideProps = async (context: NextPageContext) => {
-  const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY!);
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: '2020-08-27',
+  });
 
   // Get users logged in credentials
   const session = await getSession(context);

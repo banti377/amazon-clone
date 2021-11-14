@@ -1,19 +1,26 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { buffer } from 'micro';
 import * as admin from 'firebase-admin';
+import Stripe from 'stripe';
+import serviceAccount from '../../../firebase.json';
 
 // Establish connection to Firebase
-const serviceAccount = require('../../../firebase.json');
 const app = !admin.apps.length
   ? admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount),
+      credential: admin.credential.cert({
+        privateKey: serviceAccount.private_key,
+        clientEmail: serviceAccount.client_email,
+        projectId: serviceAccount.project_id,
+      }),
     })
   : admin.app();
 
 // Establish connection to Stripe
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2020-08-27',
+});
 
-const endpointSecret = process.env.STRIPE_SIGNING_SECRET;
+const endpointSecret = process.env.STRIPE_SIGNING_SECRET!;
 
 const fulfillOrder = async (session: any) => {
   return app
@@ -38,7 +45,7 @@ export const webhook = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
     const reqBuffer = await buffer(req);
     const payload = reqBuffer.toString();
-    const signature = req.headers['stripe-signature'];
+    const signature = req.headers['stripe-signature']!;
     let event;
 
     // Verify if event came from stripe
