@@ -16,8 +16,8 @@ const ProductFeed: FC<Props> = ({ products }) => {
       ))}
       <img
         className="md:col-span-full"
-        src="/advertisement.jpg"
-        alt="advertisement"
+        src="/advertisement 1.jpg"
+        alt="advertisement-1"
       />
       <div className="md:col-span-2 ">
         {products.slice(4, 5).map((product) => (
