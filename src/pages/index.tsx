@@ -1,4 +1,5 @@
-import type { NextPage } from 'next';
+import type { NextPage, NextPageContext } from 'next';
+import { getSession } from 'next-auth/client';
 import Head from 'next/head';
 import React from 'react';
 
@@ -31,7 +32,9 @@ const Home: NextPage<Props> = ({ products }) => {
 
 export default Home;
 
-export const getServerSideProps = async () => {
+export const getServerSideProps = async (context: NextPageContext) => {
+  const session = await getSession(context);
+
   const products = await fetch('https://fakestoreapi.com/products')
     .then((res) => res.json())
     .catch((err) => console.log(err));
@@ -39,6 +42,7 @@ export const getServerSideProps = async () => {
   return {
     props: {
       products,
+      session,
     },
   };
 };
