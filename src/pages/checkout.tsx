@@ -12,7 +12,9 @@ import { selectProducts, selectTotal } from '../slices/cartSlice';
 
 import { IProduct } from '../interfaces';
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+);
 
 const Checkout: NextPage = () => {
   const products = useSelector(selectProducts);

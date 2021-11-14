@@ -1,6 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { IProduct } from '../../interfaces';
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY!);
+import Stripe from 'stripe';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2020-08-27',
+});
 
 export const checkout = async (req: NextApiRequest, res: NextApiResponse) => {
   const { email, products } = req.body;
