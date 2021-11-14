@@ -12,7 +12,9 @@ import { selectProducts, selectTotal } from '../slices/cartSlice';
 import { IProduct } from '../interfaces';
 import axios from 'axios';
 
-const stripePromise = loadStripe(process.env.stripe_public_key!);
+const stripePromise = loadStripe(
+  'pk_test_51I6evYLKx272rZ2P4hFJnYkalLuFHejKdfLPDf24l7bjeWzjhcX0hMeSGQszMsUYpHZlN717gpjTpiycnhBnCay100x1QI4rPk'
+);
 
 const Checkout: NextPage = () => {
   const products = useSelector(selectProducts);
@@ -63,7 +65,7 @@ const Checkout: NextPage = () => {
         </div>
 
         <div className="flex flex-col bg-white p-10 shadow-md">
-          {products.length && (
+          {products.length ? (
             <>
               <h2 className="whitespace-nowrap">
                 Subtotal ({products.length} products:)
@@ -84,7 +86,7 @@ const Checkout: NextPage = () => {
                 {!session ? 'Sign in to Checkout' : 'Proceed to Checkout'}
               </button>
             </>
-          )}
+          ) : null}
         </div>
       </main>
     </div>
